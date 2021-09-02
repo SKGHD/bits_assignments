@@ -9,6 +9,7 @@ struct user				//struct user defined with name, password and balance in account
 	char *name,*password;
 	float balance;
 	int lock = 0 ;
+	int invalidattempts=0;
 }
 
 
@@ -60,9 +61,9 @@ int adminfunctions()									//admin functions, make admin user[0]
 			printf(" No more users can be added ") ;
 			break;
 		}
-		printf(" Continuing to add user, If not required press - n ");
+		printf(" Continuing to add user, If not required press - n ");  // input if admin wants to continue user addition
 		scanf(%c,&choice);
-		if(choice=='n')
+		if(choice=='n')					// admin choice
 			break;
 		usercount++;
 		printf(" Enter Username");
@@ -84,9 +85,9 @@ void main()
 	int i,invalid=0;
 	clrscr();
  
-	/*printf("Enter the username: ");					//username requested		
+	printf("Enter the username: ");					//username requested		
 	gets(currentUserName);
-	
+	/*
 	if(strcmp(currentUserName,"admin")==0)				//check if user is admin or client
 	{
 	clrscr();
