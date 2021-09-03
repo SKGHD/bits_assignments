@@ -45,35 +45,48 @@ int authenticate(char username,int position)			//authentication procedure for a 
 	
 int userfunctions()										// user functions
 {
-	}	
+	printf('Account balance is : %d',user[position].balance);
+	printf('Do you want t')
+}	
 	
-int adminfunctions()									//admin functions, make admin user[0]
+int adminfunctions(int a)									//admin functions, make admin user[0]
 {
 	char choice;
 	char *username,*password;
-	int usercount=0, temp=0; 
-	
-	while (temp=0)									//user addition
-	{
-		clrscr();
-		if(usercount==10)
-		{
-			printf(" No more users can be added ") ;
-			break;
-		}
-		printf(" Continuing to add user, If not required press - n ");  // input if admin wants to continue user addition
-		scanf(%c,&choice);
-		if(choice=='n')					// admin choice
-			break;
-		usercount++;
-		printf(" Enter Username");
-		gets(username);
-		printf("Enter Password");
-		gets(password);
-		user.name[usercount]=username;
-		user.password[usercount]=password;
-	}
-	
+	int usercount=0, temp; 
+	printf("Enter  1 - User Addition  2 - Account unclock");
+	scanf(temp);
+	switch(temp)
+	{ case 1 :  while (temp==1)									//user addition
+				{
+					clrscr();
+					if(usercount==10)
+					{
+						printf(" No more users can be added ") ;
+						break;
+					}
+					printf(" Continuing to add user, If not required press - n ");  // input if admin wants to continue user addition
+					scanf(%c,&choice);
+					if(choice=='n')					// admin choice
+						break;
+					usercount++;
+					printf(" Enter Username");
+					gets(username);
+					printf("Enter Password");
+					gets(password);
+					user.name[usercount]=username;
+					user.password[usercount]=password;
+				}
+		
+		case 2:          	// unlock user
+							printf("Enter username");
+							gets(username)
+							for(i=1;i<=10;i++)
+							{
+								if(strcmp(username,user[i]==0))
+									{user[i].lock=0; break ; }
+							}
+
 	}	
 	
 	
