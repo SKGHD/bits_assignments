@@ -10,7 +10,8 @@ struct user				//struct user defined with name, password and balance in account
 	float balance;
 	int lock = 0 ;
 	int invalidattempts=0;
-}
+};
+struct user[10];
 
 
 
@@ -33,23 +34,37 @@ int authenticate(char username,int position)			//authentication procedure for a 
 	   printf("User Name : %s\n",currentUserName);
 	   printf("Password  : ");
 	   gets(password);
-	   if(strcmp(user[position].password,password==0)
+	   if(strcmp(user[position].password,password==0)			// user authenticated
 	   {
 	   	attempts=1;
 	   }
+	   else
+		attempts++;												// wrong password entered
 	}
 	if(attempts==3)										// no of attempts exceeded, account locked
 		user[position].lock==1;
 	}
 	
-	
-int userfunctions()										// user functions
+}
+
+
+int userfunctions(int position)										// user functions
 {
-	printf('Account balance is : %d',user[position].balance);
-	printf('Do you want t')
-}	
+	int a,update;
+	printf('Choose option \n 1=Account Balance \t2=Balance Transfer \t3=Update account balance');
+	scanf(a);
+	switch(a)
+	{
+		case 1 : 	printf('Account balance is : %d',user[position].balance);
+		case 2 : 	printf('Balance transfer initiated');
+		case 3 : 	printf('Enter new balance');
+					scanf('update');
+					user[position].balance=update;
+
+					
+	}	
 	
-int adminfunctions(int a)									//admin functions, make admin user[0]
+int adminfunctions()									//admin functions, make admin user[0]
 {
 	char choice;
 	char *username,*password;
@@ -94,31 +109,24 @@ void main()
 {
 	char *currentUserName;			
 	char *password;
-	struct user[10];
+	//struct user[10];
+	user[0].user='admin';			//admin created
+	user[0].password='admin';
 	int i,invalid=0;
 	clrscr();
- 
-	printf("Enter the username: ");					//username requested		
-	gets(currentUserName);
-	/*
-	if(strcmp(currentUserName,"admin")==0)				//check if user is admin or client
+	while(1)				//infinite times
 	{
-	clrscr();
-	   printf("User Name : %s\n",currentUserName);				//user is admin
-	   printf("Password  : ");
-	   gets(password);	
-	}
-	else*/
-	{
+		printf("Enter the username: ");					//username requested		
+		gets(currentUserName);
 		for(i=0;i<=10;i++)									//user is client, check USER struct for client name
 		{
 			if(strcmp(user[i].name,currentUserName)==0)		//user matched to client list, send for authentication.
 				authenticate(currentUsername,i);				
-			else											// user name not found in client list
-			 printf ("Invalid user"); invalid++;
+			else
+			{											// user name not found in client list
+				printf ("Invalid user"); invalid++;
+				clrscr();
+			}
 		}
-
 	}
-	
-	
 }
