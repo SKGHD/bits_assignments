@@ -12,3 +12,4 @@ A financial organization needs to design a secured authentication system.
 >
 Design an algorithm to accomplish this and implement the same using C.  
  
+![Flowchart](BITS_1st_SEM_CP_FLOWCHART.png)
