@@ -118,7 +118,7 @@ void adminFunctions() //admin functions, make admin user_arr[0]
 {
 
     char username[10], password[10];
-    int usercount = 0, temp, i, bal, flag = 0;
+    int usercount = 0, temp, i, bal, pos = 0;
     // Reset Monlthy report on 1st day of Month
     if (date() == 1)
     {
@@ -127,38 +127,33 @@ void adminFunctions() //admin functions, make admin user_arr[0]
         unauthAccess = 0;
     }
 rerun: //Label to re display options
-    printf("Enter your choice : \n1 - Account unlock\n2 - View Monthly Unauthorised Access Report \n3 - Reset Monthly Unauthorised Access Report\n");
-    scanf("%d", temp);
+    printf("\nEnter your choice : \n1 - Account unlock\n2 - View Monthly Unauthorised Access Report \n3 - Reset Monthly Unauthorised Access Report\n");
+    scanf("%d", &temp);
 
     switch (temp)
     {
 
     case 1: // unlock user
-    {
-        printf("Enter username");
-        gets(username);
-        for (i = 0; i < numOfUsers(); i++)
-        {
-            if (strcmp(username, user_arr[i].name) == 0)
-            {
-                flag = 1;
-
-                break;
-            }
-        }
-        if (flag == 1)
-        {
-
-            user_arr[i].lock = 0;
-            printf("Account of User : %s unlocked successfully!", username);
-        }
-        else
-        {
-            printf("Account of User : %s not found in user list! \nTry again!", username);
-            goto rerun;
-        }
-    }
-    break;
+            printf("\n");
+		    for (i = 0; i < numOfUsers(); i++)
+		        {
+		        printf("%d - %s \n",i,user_arr[i]);
+		    	}
+		    	
+		        printf ("Enter user id - ");
+		        scanf("%d",&pos);
+		                    
+		        if (pos > 3) 
+		        {
+					printf("Invalid option");
+		            goto rerun;
+		        }
+		        else
+		        {
+		        user_arr[pos].lock = 0;
+		        printf("Account of User : %s unlocked successfully! \n", user_arr[pos].name);
+				}
+				goto rerun; 
     case 2:
         printf("Total Unauthorised Access Count :%d", unauthAccess);
 
