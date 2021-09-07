@@ -8,7 +8,6 @@
 // •	Get monthly reports of unauthorized access
 
 #include <stdio.h>
-#include <direct.h>
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
@@ -164,7 +163,7 @@ rerun: //Label to re display options
     case 2:
         printf("Total Unauthorised Access Count :%d", unauthAccess);
 
-        break;
+       goto rerun;  // TODO: Fix breaks
     case 3:
         unauthAccess = 0;
         printf("Reset Monthly Unauthorised Access Report Successful!\nCurrent Count : %d", unauthAccess);
