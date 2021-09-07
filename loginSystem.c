@@ -64,6 +64,7 @@ void authenticate(char username[], int index) //authentication procedure for a u
             {
                 attempts++; // wrong password entered
                 printf("Wrong password entered.\nNumber of tries left before account gets locked: %d", maxtry - attempts);
+                printf("\nPress ENTER to try again!");
                 getchar();
             }
         }
@@ -99,17 +100,23 @@ void userFunctions(int index) // user functions
         printf("Account balance is : %d", user_arr[index].balance);
         break;
     case 2:
-        printf("Balance transfer initiated");
+
+        printf("Enter the amount you wish to transfer :");
+        scanf("%f", &update);
+        printf("Balance transfer initiated.");
+        system("CLS");
+        user_arr[index].balance -= update;
         printf("Updated balance :%s", user_arr[index].balance);
         break;
     case 3:
-        printf("Enter new balance");
+        printf("Enter new balance :");
         scanf("%f", &update);
         user_arr[index].balance = update;
         printf("Updated balance : %s", user_arr[index].balance);
         break;
     default:
-        printf("Invalid option entered.\nPlease try again.");
+        printf("Invalid option entered.\nPlease ENTER to try again.");
+        getchar();
         userFunctions(index); //Recalling method to display options to user once again
     }
 }
@@ -134,26 +141,26 @@ rerun: //Label to re display options
     {
 
     case 1: // unlock user
-            printf("\n");
-		    for (i = 0; i < numOfUsers(); i++)
-		        {
-		        printf("%d - %s \n",i,user_arr[i]);
-		    	}
-		    	
-		        printf ("Enter user id - ");
-		        scanf("%d",&pos);
-		                    
-		        if (pos > 3) 
-		        {
-					printf("Invalid option");
-		            goto rerun;
-		        }
-		        else
-		        {
-		        user_arr[pos].lock = 0;
-		        printf("Account of User : %s unlocked successfully! \n", user_arr[pos].name);
-				}
-				goto rerun; 
+        printf("\n");
+        for (i = 0; i < numOfUsers(); i++)
+        {
+            printf("%d - %s \n", i, user_arr[i]);
+        }
+
+        printf("Enter user id - ");
+        scanf("%d", &pos);
+
+        if (pos >= numOfUsers())
+        {
+            printf("Invalid option");
+            goto rerun;
+        }
+        else
+        {
+            user_arr[pos].lock = 0;
+            printf("Account of User : %s unlocked successfully! \n", user_arr[pos].name);
+        }
+        goto rerun;
     case 2:
         printf("Total Unauthorised Access Count :%d", unauthAccess);
 
