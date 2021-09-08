@@ -21,7 +21,8 @@ struct user //struct user defined with name, password and balance in account
 
 struct user user_arr[] = {
     {"admin", "admin", 2000, 0},
-    {"aka", "aka", 2002, 1},
+    {"rupesh", "pass", 2002, 1},
+    {"amirul", "pass", 5000, 0},
     {"sangram", "pass", 2222, 0}};
 int unauthAccess = 0;
 
@@ -124,12 +125,12 @@ void adminFunctions() //admin functions, make admin user_arr[0]
 {
 
     char username[10], password[10];
+    char lockStatus[10];
     int usercount = 0, temp, i, bal, pos = 0;
     // Reset Monlthy report on 1st day of Month
     if (date() == 1)
     {
 
-        /* code */
         unauthAccess = 0;
     }
 rerun: //Label to re display options
@@ -140,19 +141,22 @@ rerun: //Label to re display options
     {
 
     case 1: // unlock user
-        printf("\n");
-        for (i = 0; i < numOfUsers(); i++)
+        printf("  No. |    Name    |  Lock Status  \n");
+        printf("-----------------------------------\n");
+        for (i = 1; i < numOfUsers(); i++)
         {
-            printf("%d - %s \n", i, user_arr[i]);
+            strcpy(lockStatus, (user_arr[i].lock == 1) ? "Locked" : "Unlocked");
+            printf("   %d -    %s -     %s \n", i, user_arr[i],lockStatus);
         }
 
-        printf("Enter user id - ");
+        printf("Enter user id :");
         scanf("%d", &pos);
 
-        if (pos >= numOfUsers())
+        if (pos > numOfUsers() || pos == 0)
         {
-            printf("Invalid option");
-            goto rerun;
+            printf("Invalid option selected!\nPress ENTER to try again!");
+            getchar();
+			goto rerun;
         }
         else
         {
@@ -163,7 +167,7 @@ rerun: //Label to re display options
     case 2:
         printf("Total Unauthorised Access Count :%d", unauthAccess);
 
-       goto rerun;  // TODO: Fix breaks
+        goto rerun; // TODO: Fix breaks
     case 3:
         unauthAccess = 0;
         printf("Reset Monthly Unauthorised Access Report Successful!\nCurrent Count : %d", unauthAccess);
