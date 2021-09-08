@@ -44,6 +44,19 @@ checkAuth:                         //label for goto
     {
         system("CLS");
         printf("Account Locked. Contact Admin to unlock your account!");
+        printf("\nEnter you choice : \n 1 - Return to Login Page \n 2 - Exit the program\n");
+            scanf("%d", &ch);
+           switch(ch)
+            {
+            	case 1:
+                	ch = 0;
+            		main();
+            		break;
+            	case 2:
+            		exit(0);
+                
+            
+            }
     }
 
     else
@@ -89,7 +102,7 @@ checkAuth:                         //label for goto
                 ch = 0;
             }
             else
-                goto homepage;
+                return 2;
         }
         //        }
     }
@@ -107,9 +120,10 @@ int date() // Checking current date for monthly reports
 }
 int userFunctions(int index) // user functions
 {
-    system("CLS");
     int a, ch;
     float update;
+
+    system("CLS");
     printf("Welcome %s ", user_arr[index].name);
     printf("\nChoose option\n 1 = View Account Balance \n 2 = Balance Transfer \n 3 = Update account balance\n");
     scanf("%d", &a);
@@ -117,7 +131,16 @@ int userFunctions(int index) // user functions
     {
     case 1:
         printf("---------------------------------------------------------");
-        printf("\nAccount balance is : %.2f ", user_arr[index].balance);
+        printf("\nAccount balance is : %.2f \n", user_arr[index].balance);
+        printf("\nPress\n 1 - Go to User Menu \n 2 - Go to Login Screen\n");
+
+        scanf("%d", &ch);
+        if (ch == 1)
+
+            userFunctions(index);
+
+        else
+            main();
         break;
     case 2:
 
@@ -127,15 +150,33 @@ int userFunctions(int index) // user functions
         system("CLS");
         user_arr[index].balance -= update;
         printf("Updated balance :%.2f", user_arr[index].balance);
+        printf("\nPress\n 1 - Go to User Menu \n 2 - Go to Login Screen\n");
+
+        scanf("%d", &ch);
+        if (ch == 1)
+
+            userFunctions(index);
+
+        else
+            main();
         break;
     case 3:
-        printf("Enter new balance :");
+        printf("Enter new balance : ");
         scanf("%f", &update);
         user_arr[index].balance = update;
         printf("Updated balance : %.2f", user_arr[index].balance);
+        printf("\nPress\n 1 - Go to User Menu \n 2 - Go to Login Screen\n");
+
+        scanf("%d", &ch);
+        if (ch == 1)
+
+            userFunctions(index);
+
+        else
+            main();
         break;
     default:
-        printf("Invalid option entered. Press\n 1 - Yes \n 2 - No\n");
+        printf("Invalid option entered. Press\n 1 - Try Again \n 2 - Go to Login Screen\n");
 
         scanf("%d", &ch);
         if (ch == 1)
@@ -148,7 +189,7 @@ int userFunctions(int index) // user functions
     return 0;
 }
 
-int adminFunctions() //admin functions, make admin user_arr[0]
+int adminFunctions() //admin functions,  admin is set to user_arr[0]
 {
 
     char username[10], password[10], lockStatus[10];
@@ -183,7 +224,7 @@ rerun: //Label to re display options
 
         if (pos > numOfUsers() || pos == numOfUsers() || pos == 0)
         {
-            printf("Invalid option selected!\nPlease try again!");
+            printf("Invalid option selected!\nPlease try again!\n");
 
             goto rerun;
         }
