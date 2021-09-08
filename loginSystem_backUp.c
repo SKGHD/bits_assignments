@@ -35,8 +35,8 @@ int date();
 // Prog start
 int authenticate(char username[], int index) //authentication procedure for a user
 {
-    int maxtry = 3, attempts = 1;
-
+    int maxtry = 3, attempts = 1,k=1;
+  
     char password[10];
     if (user_arr[index].lock == 1) //account check for lock status
     {
@@ -46,27 +46,25 @@ int authenticate(char username[], int index) //authentication procedure for a us
     else
     {
 
-        while (attempts <= maxtry) //no of incorrect attempts checked
+        while (attempts <= maxtry && k!=0) //no of incorrect attempts checked
         {
 
             system("CLS");
             printf("Found User : %s \n", username);
-            printf("Enter Your Password  : \n");
-            scanf("%s", password);
+            printf("Enter Your Password  : ");
+            gets(password);
             if (strcmp(user_arr[index].password, password) == 0) // user authenticated
             {
-                printf("Successfully logged in!\n");
-                system("CLS");
-                if (strcmp(username, "admin") == 0)
-                    return 0; //for Admin Screen
-
-                else
-                    return 1; //for user Screen
+                if (strcmp(username, "admin") == 0) //Loading Admin Screen
+                     k = adminFunctions();
+                    
+                else //Load user Screen
+                    k = userFunctions(index);
             }
             else
             {
-                printf("Wrong password entered.\nNumber of tries left before account gets locked: %d", maxtry - attempts);
                 attempts++; // wrong password entered
+                printf("Wrong password entered.\nNumber of tries left before account gets locked: %d", maxtry - attempts);
                 printf("\nPress ENTER to try again!");
                 getchar();
             }
@@ -76,10 +74,9 @@ int authenticate(char username[], int index) //authentication procedure for a us
             printf("Maximum tries for wrong attempt reached. Your account is now locked!");
             user_arr[index].lock = 1;
             unauthAccess++; //Increment unauthorised access count
-            return 2;       // for unauthorised access
         }
     }
-    return -1; // for error
+    return 0;
 }
 int date() // Checking current date for monthly reports
 {
@@ -96,18 +93,18 @@ int userFunctions(int index) // user functions
     system("CLS");
     int a;
     float update;
-    printf("Welcome %s ", user_arr[index].name);
-    printf("\nChoose option\n 1 = View Account Balance \n 2 = Balance Transfer \n 3 = Update account balance\n");
+    printf("Welcome %s \n", user_arr[index].name);
+    printf("Choose option\n 1 = View Account Balance \n 2 = Balance Transfer \n 3 = Update account balance\n");
     scanf("%d", &a);
     switch (a)
     {
     case 1:
-        printf("---------------------------------------------------------");
-        printf("\nAccount balance is : %.2f ", user_arr[index].balance);
+    
+        printf("Account balance is : %.2f \n", user_arr[index].balance);
         break;
     case 2:
 
-        printf("\nEnter the amount you wish to transfer :");
+        printf("Enter the amount you wish to transfer :");
         scanf("%f", &update);
         printf("Balance transfer initiated.");
         system("CLS");
@@ -131,8 +128,8 @@ int userFunctions(int index) // user functions
 int adminFunctions() //admin functions, make admin user_arr[0]
 {
 
-    char username[10], password[10], lockStatus[10];
-
+    char username[10], password[10];
+    char lockStatus[10];
     int usercount = 0, temp, i, bal, pos = 0;
     // Reset Monlthy report on 1st day of Month
     if (date() == 1)
@@ -141,8 +138,7 @@ int adminFunctions() //admin functions, make admin user_arr[0]
         unauthAccess = 0;
     }
 rerun: //Label to re display options
-
-    printf("Enter your choice : \n1 - Account unlock\n2 - View Monthly Unauthorised Access Report \n3 - Reset Monthly Unauthorised Access Report\n");
+    printf("\nEnter your choice : \n1 - Account unlock\n2 - View Monthly Unauthorised Access Report \n3 - Reset Monthly Unauthorised Access Report\n");
     scanf("%d", &temp);
 
     switch (temp)
@@ -154,16 +150,16 @@ rerun: //Label to re display options
         for (i = 1; i < numOfUsers(); i++)
         {
             strcpy(lockStatus, (user_arr[i].lock == 1) ? "Locked" : "Unlocked");
-            printf("%5d - %12s - %12s \n", i, user_arr[i], lockStatus);
+            printf("   %d -    %s -     %s \n", i, user_arr[i], lockStatus);
         }
 
-        printf("\nEnter user id :");
+        printf("Enter user id :");
         scanf("%d", &pos);
 
         if (pos > numOfUsers() || pos == 0)
         {
-            printf("Invalid option selected!\nPlease try again!");
-
+            printf("Invalid option selected!\nPress ENTER to try again!");
+            getchar();
             goto rerun;
         }
         else
@@ -171,25 +167,24 @@ rerun: //Label to re display options
             user_arr[pos].lock = 0;
             printf("Account of User : %s unlocked successfully! \n", user_arr[pos].name);
         }
-        break;
+//        goto rerun;
+         break;
     case 2:
         printf("Total Unauthorised Access Count :%d", unauthAccess);
 
+        // goto rerun; // TODO: Fix breaks
         break;
     case 3:
         unauthAccess = 0;
         printf("Reset Monthly Unauthorised Access Report Successful!\nCurrent Count : %d", unauthAccess);
-
         break;
     default:
-        printf("Invalid option entered.\n");
-
-        goto rerun;
+        printf("Invalid option entered.\nPlease try again.");
         break;
     }
     return 0;
 }
-int numOfUsers()  // Returns number of users in memory
+int numOfUsers()
 {
     return (sizeof(user_arr) / sizeof(user_arr[0]));
 }
@@ -198,45 +193,28 @@ int main()
     char currentUserName[10];
     char password[10];
 
-    int i, invalid = 0, flag = 0, authStatus;
+    int i, invalid = 0, flag = 0, loggedIn = 1;
     system("cls");
     printf("Welcome to Account Management System.\n");
-    //    while (1) //infinite times
-    //    {
-    printf("Enter the username: "); //username requested
-    scanf("%s", currentUserName);
-    for (i = 0; i < numOfUsers(); i++) //user is client, check USER struct for client name
+    while (1) //infinite times
     {
-        if (strcmp(user_arr[i].name, currentUserName) == 0) //user matched to client list, send for authentication.
+        printf("Enter the username: \n"); //username requested
+        gets(currentUserName);
+        for (i = 0; i < numOfUsers(); i++) //user is client, check USER struct for client name
         {
-            authStatus = authenticate(currentUserName, i);
-            flag = 1;
-            break;
+            if (strcmp(user_arr[i].name, currentUserName) == 0) //user matched to client list, send for authentication.
+            {
+                authenticate(currentUserName, i);
+                flag = 1;
+            }
         }
-    }
-    if (flag != 1)
-    {
-        printf("\n%s not found! Press ENTER to try again!", currentUserName);
-        invalid++;
-        getchar();
-        system("CLS");
-    }
-    //    }
-    // Handling routing
-    switch (authStatus)
-    {
-    case 0:
-        adminFunctions();
-        break;
-    case 1:
-        userFunctions(i);
-        break;
-    case 2:
-        main();
-        break;
-    case -1:
-        printf("Unexpected Error Occured!");
-        break;
+        if (flag != 1)
+        {
+            printf("%s not found! Press ENTER to try again!", currentUserName);
+            invalid++;
+            getchar();
+            system("CLS");
+        }
     }
     return 0;
 }
