@@ -68,18 +68,18 @@ checkAuth:                         //label for goto
         }
         else
         {
-            printf("Wrong password entered.\nNumber of tries left before account gets locked: %d\n", maxtry - attempts);
-            if (attempts == maxtry)
+            if (strcmp(username, "admin") != 0) // no of attempts exceeded, account locked if not admin
             {
-                if (strcmp(username, "admin") != 0) // no of attempts exceeded, account locked if not admin
+                printf("Wrong password entered.\nNumber of tries left before account gets locked: %d\n", maxtry - attempts);
+                if (attempts == maxtry)
                 {
                     printf("Maximum tries for wrong attempt reached. Your account is now locked!");
                     user_arr[index].lock = 1;
                     unauthAccess++; //Increment unauthorised access count
                     goto checkAuth; // for unauthorised access
                 }
+                attempts++; // wrong password entered so incrementing by 1
             }
-            attempts++; // wrong password entered so incrementing by 1
             printf("Try entering password again ?\n 1 - Yes \n 2 - No\n");
             scanf("%d", &ch);
             if (ch == 1)
@@ -89,7 +89,7 @@ checkAuth:                         //label for goto
                 ch = 0;
             }
             else
-                main();
+                goto homepage;
         }
         //        }
     }
