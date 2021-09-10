@@ -119,27 +119,22 @@ int userFunctions(int index) // user functions
     case 1: //Account balance displayed
         printf("---------------------------------------------------------");
         printf("\nAccount balance is : %.2f \n", user_arr[index].balance);
-    useroption: //use after user function complete
-        printf("\nPress\n 1 - Go to User Menu \n 2 - Go to Login Screen\n");
-        scanf("%d", &ch);
-        switch (ch)
-        {
-        case 1:
-            userFunctions(index);
-        case 2:
-            main();
-        default:
-            printf("Invalid Option:");
-            goto useroption;
-        }
+        getch();
+        goto useroption;
+        break;
     case 2: // Balance transfer
 
         printf("\nEnter the amount you wish to transfer :");
         scanf("%f", &update);
-        printf("Balance transfer initiated.");
-        system("CLS");
-        user_arr[index].balance -= update;
-        printf("Updated balance :%.2f", user_arr[index].balance);
+        if (update <= user_arr[index].balance)
+        {
+            printf("Balance transfer initiated.\n");
+            user_arr[index].balance -= update;
+            printf("Updated balance :%.2f", user_arr[index].balance);
+        }
+        else
+            printf("You don't have enough balance to make this transaction.\nPlease enter correct amount!");
+        getch();
         goto useroption;
 
     case 3: // Balance update
@@ -147,9 +142,29 @@ int userFunctions(int index) // user functions
         scanf("%f", &update);
         user_arr[index].balance = update;
         printf("Updated balance : %.2f", user_arr[index].balance);
+        getch();
         goto useroption;
     default: //incorrect option selected
-        goto useroption;
+        printf("Invalid Option! Press Enter to Try again!");
+        a = 0;
+        getch();
+        userFunctions(index);
+    }
+useroption: //use after user function complete
+    printf("\nPress\n 1 - Go to User Menu \n 2 - Logout\n");
+    scanf("%d", &ch);
+    switch (ch)
+    {
+    case 1:
+        userFunctions(index);
+    case 2:
+        main();
+    default:
+        printf("Invalid Option! Press Enter to Try again!");
+        ch = 0;
+        getch();
+        userFunctions(index);
+        break;
     }
     return 0;
 }
