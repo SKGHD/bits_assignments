@@ -11,6 +11,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+#include <conio.h>
 
 struct user //struct user defined with name, password and balance in account
 {
@@ -33,6 +34,8 @@ int numOfUsers();
 int adminFunctions();
 int date();
 void displayOptions();
+int main();
+
 // Prog start
 int authenticate(char username[], int index) //authentication procedure for a user
 {
@@ -44,27 +47,13 @@ checkAuth:                         //label for goto
     {
         system("CLS");
         printf("Account Locked. Contact Admin to unlock your account!");
-        printf("\nEnter you choice : \n 1 - Return to Login Page \n 2 - Exit the program\n");
-            scanf("%d", &ch);
-           switch(ch)
-            {
-            	case 1:
-                	ch = 0;
-            		main();
-            		break;
-            	case 2:
-            		exit(0);
-                
-            
-            }
+        printf("\nPress Enter to Return to Login Page.\n");
+        getch();
+        return 2;
     }
 
     else
     {
-
-        //        while (attempts <= maxtry) //no of incorrect attempts checked
-        //        {
-
         system("CLS");
         printf("Found User : %s \n", username);
         printf("Enter Your Password  : ");
@@ -86,7 +75,7 @@ checkAuth:                         //label for goto
                 printf("Wrong password entered.\nNumber of tries left before account gets locked: %d\n", maxtry - attempts);
                 if (attempts == maxtry)
                 {
-                    printf("Maximum tries for wrong attempt reached. Your account is now locked!");
+                    printf("Maximum tries for wrong attempt reached. Your account is now locked! \n");
                     user_arr[index].lock = 1;
                     unauthAccess++; //Increment unauthorised access count
                     goto checkAuth; // for unauthorised access
@@ -126,23 +115,26 @@ int userFunctions(int index) // user functions
     system("CLS");
     printf("Welcome %s ", user_arr[index].name);
     printf("\nChoose option\n 1 = View Account Balance \n 2 = Balance Transfer \n 3 = Update account balance\n");
-    scanf("%d", &a);
-    switch (a)
+    scanf("%d", &a); //Options available displayed
+    switch (a)       //user input used
     {
-    case 1:
+    case 1: //Account balance displayed
         printf("---------------------------------------------------------");
         printf("\nAccount balance is : %.2f \n", user_arr[index].balance);
+    useroption: //use after user function complete
         printf("\nPress\n 1 - Go to User Menu \n 2 - Go to Login Screen\n");
-
         scanf("%d", &ch);
-        if (ch == 1)
-
+        switch (ch)
+        {
+        case 1:
             userFunctions(index);
-
-        else
+        case 2:
             main();
-        break;
-    case 2:
+        default:
+            printf("Invalid Option:");
+            goto useroption;
+        }
+    case 2: // Balance transfer
 
         printf("\nEnter the amount you wish to transfer :");
         scanf("%f", &update);
@@ -150,41 +142,16 @@ int userFunctions(int index) // user functions
         system("CLS");
         user_arr[index].balance -= update;
         printf("Updated balance :%.2f", user_arr[index].balance);
-        printf("\nPress\n 1 - Go to User Menu \n 2 - Go to Login Screen\n");
+        goto useroption;
 
-        scanf("%d", &ch);
-        if (ch == 1)
-
-            userFunctions(index);
-
-        else
-            main();
-        break;
-    case 3:
+    case 3: // Balance update
         printf("Enter new balance : ");
         scanf("%f", &update);
         user_arr[index].balance = update;
         printf("Updated balance : %.2f", user_arr[index].balance);
-        printf("\nPress\n 1 - Go to User Menu \n 2 - Go to Login Screen\n");
-
-        scanf("%d", &ch);
-        if (ch == 1)
-
-            userFunctions(index);
-
-        else
-            main();
-        break;
-    default:
-        printf("Invalid option entered. Press\n 1 - Try Again \n 2 - Go to Login Screen\n");
-
-        scanf("%d", &ch);
-        if (ch == 1)
-
-            userFunctions(index);
-
-        else
-            main();
+        goto useroption;
+    default: //incorrect option selected
+        goto useroption;
     }
     return 0;
 }
@@ -222,66 +189,53 @@ rerun: //Label to re display options
         printf("\nEnter your choice :");
         scanf("%d", &pos);
 
-        if (pos > numOfUsers() || pos == numOfUsers() || pos == 0)
+        if (pos >= numOfUsers() || pos == 0) // check if the entered  position is invalid
         {
-            printf("Invalid option selected!\nPlease try again!\n");
+            printf("\n Invalid option selected!\nPlease try again! \n");
 
             goto rerun;
         }
         else
         {
-            user_arr[pos].lock = (user_arr[pos].lock == 1) ? 0 : 1;
+            user_arr[pos].lock = (user_arr[pos].lock == 1) ? 0 : 1; // locked account unlocked and vice versa
 
             printf("Account of User : %s %s successfully! \n", user_arr[pos].name, (user_arr[pos].lock == 1) ? "Locked" : "Unlocked");
         }
-
-        printf("Display Admin Options again:\n 1 - Yes \n 2 - No\n");
-        scanf("%d", &ch);
-        if (ch == 1)
-        {
-            system("CLS");
-            goto rerun;
-        }
-        else
-            break;
+        goto option;
 
     case 2:
         printf("Total Unauthorised Access Count :%d\n", unauthAccess);
-
-        printf("Display Admin Options again:\n 1 - Yes \n 2 - No\n");
-        scanf("%d", &ch);
-        if (ch == 1)
-        {
-            system("CLS");
-            goto rerun;
-        }
-        else
-            break;
+        goto option;
     case 3:
         unauthAccess = 0;
         printf("Reset Monthly Unauthorised Access Report Successful!\nCurrent Count : %d\n", unauthAccess);
-
-        printf("Display Admin Options again:\n 1 - Yes \n 2 - No\n");
+    option:
+        printf("Display Admin Options again:\n 1 - Yes \n 2 - No (Logout) \n");
         scanf("%d", &ch);
-        if (ch == 1)
+        switch (ch)
         {
+        case 1:
             system("CLS");
             goto rerun;
+        case 2:
+            printf("Logging out user\n");
+            printf("Press any key to Continue\n"); //pause for input
+            getchar();
+            main();
+        default:
+            printf("Invalid option entered.\n");
+            printf("Press any key to Continue\n"); //pause for input
+            getchar();
+            //	system("CLS");
+            goto option;
         }
-        else
-            break;
+
     default:
         printf("Invalid option entered.\n");
-
-        printf("Display Admin Options again:\n 1 - Yes \n 2 - No\n");
-        scanf("%d", &ch);
-        if (ch == 1)
-        {
-            system("CLS");
-            goto rerun;
-        }
-        else
-            break;
+        printf("Press any key to Continue\n");
+        getch();
+        system("CLS"); //pause for input
+        goto rerun;
     }
     return 0;
 }
@@ -289,8 +243,8 @@ int numOfUsers() // Returns number of users in memory
 {
     return (sizeof(user_arr) / sizeof(user_arr[0]));
 }
-void displayOptions()
-{ // helper method to display options to STDOUT
+void displayOptions() // helper method to display options to STDOUT
+{
     int ch;
     printf("Return to Login Screen?\n 1 - Yes\n 2 - No\n");
     scanf("%d", &ch);
@@ -304,21 +258,24 @@ void displayOptions()
 
     default:
         printf("\nInvalid Input!");
+        printf("Press any key to Continue\n"); //pause for input
+        getch();
         break;
     }
 }
+
+// Main Method
 int main()
 {
 
     char currentUserName[10];
-    char password[10];
-    int i, invalid = 0, flag, authStatus;
+    char password[10], a;
+    int i, flag, authStatus;
 homepage:
     flag = 0;
     system("cls");
     printf("Welcome to Account Management System.\n");
-    //    while (1) //infinite times
-    //    {
+
     printf("Enter the username: "); //username requested
     scanf("%s", currentUserName);
     for (i = 0; i < numOfUsers(); i++) //user is client, check USER struct for client name
@@ -330,13 +287,15 @@ homepage:
             break;
         }
     }
-    if (flag != 1)
+    if (flag != 1) //unknown user , send to unauthorised access attempt
     {
-        printf("\n%s not found! Press ENTER to try again!", currentUserName);
-        invalid++;
+        printf("\n%s not found! \n", currentUserName);
+        unauthAccess++;
+        printf("Press any key to Continue\n"); //pause for input
+        getch();
         goto homepage;
     }
-    //    }
+
     // Handling routing
     switch (authStatus)
     {
